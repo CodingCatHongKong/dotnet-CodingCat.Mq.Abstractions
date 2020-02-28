@@ -10,9 +10,22 @@ namespace CodingCat.Mq.Abstractions
         public ILogger Logger { get; set; }
         public TimeSpan Timeout { get; set; }
 
+        public bool IsTimeoutEnabled => this.Timeout.TotalMilliseconds > 0;
+
         public virtual void OnProcessError(Exception ex)
         {
             this.Logger?.LogError(ex, "");
+        }
+
+        public virtual ManualResetEvent GetProcessedNotifier()
+        {
+            var notifier = new ManualResetEvent(false);
+            if (this.IsTimeoutEnabled)
+            {
+                Task.Delay(this.Timeout)
+                    .ContinueWith(task => notifier.Set());
+            }
+            return notifier;
         }
     }
 
@@ -28,18 +41,14 @@ namespace CodingCat.Mq.Abstractions
 
         public virtual void Process(TInput input)
         {
-            var willTimeout = this.Timeout.TotalMilliseconds > 0;
-            var notifier = new AutoResetEvent(false);
-
-            if (willTimeout)
-            {
-                Task.Delay(this.Timeout)
-                    .ContinueWith(task => notifier.Set());
-            }
+            var notifier = this.GetProcessedNotifier();
 
             Task.Run(() =>
             {
-                try { this.OnInput(input); }
+                try
+                {
+                    this.OnInput(input);
+                }
                 catch (Exception ex)
                 {
                     this.OnProcessError(ex);
