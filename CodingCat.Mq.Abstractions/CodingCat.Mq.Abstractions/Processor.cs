@@ -17,15 +17,36 @@ namespace CodingCat.Mq.Abstractions
             this.Logger?.LogError(ex, "");
         }
 
-        public virtual ManualResetEvent GetProcessedNotifier()
+        protected void Process(Action action)
         {
-            var notifier = new ManualResetEvent(false);
-            if (this.IsTimeoutEnabled)
+            var notifier = new AutoResetEvent(false);
+            Task.Run(() =>
             {
-                Task.Delay(this.Timeout)
-                    .ContinueWith(task => notifier.Set());
-            }
-            return notifier;
+                try
+                {
+                    if (action == null)
+                        this.Logger?.LogWarning($"{nameof(action)} is null");
+
+                    action?.Invoke();
+                }
+                catch (Exception ex)
+                {
+                    this.OnProcessError(ex);
+                }
+                notifier.Set();
+            });
+
+            this.WaitFor(notifier);
+        }
+
+        protected void WaitFor(EventWaitHandle notifier)
+        {
+            if (this.IsTimeoutEnabled)
+                using (notifier)
+                    notifier.WaitOne(this.Timeout);
+            else
+                using (notifier)
+                    notifier.WaitOne();
         }
     }
 
@@ -39,26 +60,35 @@ namespace CodingCat.Mq.Abstractions
 
         #endregion Constructor(s)
 
-        public virtual void Process(TInput input)
+        public virtual void HandleInput(TInput input)
         {
-            var notifier = this.GetProcessedNotifier();
-
-            Task.Run(() =>
-            {
-                try
-                {
-                    this.OnInput(input);
-                }
-                catch (Exception ex)
-                {
-                    this.OnProcessError(ex);
-                }
-                notifier.Set();
-            });
-
-            using (notifier) notifier.WaitOne();
+            this.Process(() => this.Process(input));
         }
 
-        protected abstract void OnInput(TInput input);
+        protected abstract void Process(TInput input);
+    }
+
+    public abstract class Processor<TInput, TOutput> : Processor
+    {
+        public TOutput DefaultOutput { get; set; } = default(TOutput);
+
+        #region Constructor(s)
+
+        public Processor() : base()
+        {
+        }
+
+        #endregion Constructor(s)
+
+        public virtual TOutput HandleInput(TInput input)
+        {
+            var output = this.DefaultOutput;
+
+            this.Process(() => output = this.Process(input));
+
+            return output;
+        }
+
+        protected abstract TOutput Process(TInput input);
     }
 }
