@@ -31,31 +31,18 @@ namespace CodingCat.Mq.Abstractions
 
         #endregion Constructor(s)
 
-        public abstract void Process(TInput input);
-    }
-
-    public abstract class Processor<TInput, TOutput> : Processor
-    {
-        public ISerializer<TInput> InputSerializer;
-        public ISerializer<TOutput> OutputSerializer;
-
-        #region Constructor(s)
-
-        protected Processor()
+        public virtual void Process(TInput input)
         {
+            try
+            {
+                this.OnInput(input);
+            }
+            catch (Exception ex)
+            {
+                this.OnProcessError(ex);
+            }
         }
 
-        public Processor(
-            ISerializer<TInput> inputSerializer,
-            ISerializer<TOutput> outputSerializer
-        )
-        {
-            this.InputSerializer = inputSerializer;
-            this.OutputSerializer = outputSerializer;
-        }
-
-        #endregion Constructor(s)
-
-        public abstract TOutput Process(TInput input);
+        protected abstract void OnInput(TInput input);
     }
 }
