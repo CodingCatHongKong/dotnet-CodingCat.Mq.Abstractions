@@ -1,6 +1,9 @@
-﻿namespace CodingCat.Mq.Abstractions.Tests.Impls
+﻿using CodingCat.Mq.Abstractions.Interfaces;
+
+namespace CodingCat.Mq.Abstractions.Tests.Impls
 {
-    public class SimpleOutputProcessor<T> : DelegatedOutputProcessor<T>
+    public class SimpleOutputProcessor<T>
+        : DelegatedOutputProcessor<T>, INoInputProcessor<T>
     {
         #region Constructor(s)
 

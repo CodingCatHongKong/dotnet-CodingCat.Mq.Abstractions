@@ -1,4 +1,5 @@
-﻿using CodingCat.Mq.Abstractions.Tests.Impls;
+﻿using CodingCat.Mq.Abstractions.Interfaces;
+using CodingCat.Mq.Abstractions.Tests.Impls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
@@ -16,10 +17,13 @@ namespace CodingCat.Mq.Abstractions.Tests
             var actual = null as string;
 
             // Act
-            new SimpleProcessor<string>(value => actual = value)
+            var processor = new SimpleProcessor<string>(
+                value => actual = value
+            )
             {
                 Timeout = TimeSpan.FromMilliseconds(100)
-            }.HandleInput(expected);
+            } as IProcessor<string>;
+            processor.HandleInput(expected);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -33,10 +37,11 @@ namespace CodingCat.Mq.Abstractions.Tests
             var actual = null as Exception;
 
             // Act
-            new SimpleProcessor<string>(
+            var processor = new SimpleProcessor<string>(
                 value => throw expected,
                 ex => actual = ex
-            ).HandleInput(null);
+            ) as IProcessor<string>;
+            processor.HandleInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -50,7 +55,7 @@ namespace CodingCat.Mq.Abstractions.Tests
             var actual = expected;
 
             // Act
-            new SimpleProcessor<string>(
+            var processor = new SimpleProcessor<string>(
                 value =>
                 {
                     Thread.Sleep(1500);
@@ -59,7 +64,8 @@ namespace CodingCat.Mq.Abstractions.Tests
             )
             {
                 Timeout = TimeSpan.FromMilliseconds(100)
-            }.HandleInput(null);
+            } as IProcessor<string>;
+            processor.HandleInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -72,12 +78,13 @@ namespace CodingCat.Mq.Abstractions.Tests
             var expected = Guid.NewGuid().ToString();
 
             // Act
-            var actual = new SimpleProcessor<object, string>(
+            var processor = new SimpleProcessor<object, string>(
                 value => expected
             )
             {
                 Timeout = TimeSpan.FromSeconds(1)
-            }.ProcessInput(null);
+            } as IProcessor<object, string>;
+            var actual = processor.ProcessInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -88,13 +95,14 @@ namespace CodingCat.Mq.Abstractions.Tests
         {
             // Arrange
             var expected = new Exception();
-            var actual = expected;
+            var actual = null as Exception;
 
             // Act
-            new SimpleProcessor<object, string>(
+            var processor = new SimpleProcessor<object, string>(
                 value => throw expected,
                 ex => actual = ex
-            ).ProcessInput(null);
+            ) as IProcessor<object, string>;
+            processor.ProcessInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -107,7 +115,7 @@ namespace CodingCat.Mq.Abstractions.Tests
             var expected = int.MinValue;
 
             // Act
-            var actual = new SimpleProcessor<object, int>(
+            var processor = new SimpleProcessor<object, int>(
                 value =>
                 {
                     Thread.Sleep(1500);
@@ -117,7 +125,8 @@ namespace CodingCat.Mq.Abstractions.Tests
             {
                 DefaultOutput = expected,
                 Timeout = TimeSpan.FromMilliseconds(100)
-            }.ProcessInput(null);
+            } as IProcessor<object, int>;
+            var actual = processor.ProcessInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -130,10 +139,13 @@ namespace CodingCat.Mq.Abstractions.Tests
             var expected = Guid.NewGuid().ToString();
 
             // Act
-            var actual = new SimpleOutputProcessor<string>(() => expected)
+            var processor = new SimpleOutputProcessor<string>(
+                () => expected
+            )
             {
                 Timeout = TimeSpan.FromSeconds(1)
-            }.ProcessWithDefaultInput();
+            } as INoInputProcessor<string>;
+            var actual = processor.ProcessWithDefaultInput();
 
             // Assert
             Assert.AreEqual(expected, actual);
