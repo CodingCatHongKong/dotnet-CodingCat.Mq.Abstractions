@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace CodingCat.Mq.Abstractions
+﻿namespace CodingCat.Mq.Abstractions
 {
     public abstract class DelegatedProcessor<T> : Processor<T>
     {

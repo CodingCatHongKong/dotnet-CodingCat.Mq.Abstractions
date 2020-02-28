@@ -1,21 +1,13 @@
 ﻿namespace CodingCat.Mq.Abstractions.Tests.Impls
 {
-    public class SimpleOutputProcessor<T> : OutputProcessor<T>
+    public class SimpleOutputProcessor<T> : DelegatedOutputProcessor<T>
     {
-        public delegate T ProcessDelegate();
-
-        public ProcessDelegate ProcessHandler { get; }
-
         #region Constructor(s)
 
-        public SimpleOutputProcessor(ProcessDelegate processHandler)
-        {
-            this.ProcessHandler = processHandler;
-        }
+        public SimpleOutputProcessor(
+            OutputProcessDelegate delegatedOutputProcess
+        ) : base(delegatedOutputProcess) { }
 
         #endregion Constructor(s)
-
-        protected override T Process(object input) =>
-            this.ProcessHandler();
     }
 }

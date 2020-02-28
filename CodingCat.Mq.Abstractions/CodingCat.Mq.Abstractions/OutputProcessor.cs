@@ -3,10 +3,12 @@
     public abstract class OutputProcessor<T> : Processor<object, T>
     {
         #region Constructor(s)
+
         public OutputProcessor()
         {
             this.DefaultInput = null;
         }
-        #endregion
+
+        #endregion Constructor(s)
     }
 }
