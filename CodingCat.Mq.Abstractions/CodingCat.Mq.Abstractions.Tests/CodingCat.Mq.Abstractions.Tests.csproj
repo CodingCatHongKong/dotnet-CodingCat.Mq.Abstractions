@@ -46,10 +46,14 @@
       <HintPath>..\packages\MSTest.TestFramework.1.3.2\lib\net45\Microsoft.VisualStudio.TestPlatform.TestFramework.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Impls\SimpleOutputProcessor.cs" />
+    <Compile Include="Impls\SimpleProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TestProcessors.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
