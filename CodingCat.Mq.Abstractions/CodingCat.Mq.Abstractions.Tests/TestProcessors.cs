@@ -19,7 +19,7 @@ namespace CodingCat.Mq.Abstractions.Tests
             new SimpleProcessor<string>(value => actual = value)
             {
                 Timeout = TimeSpan.FromMilliseconds(100)
-            }.Process(expected);
+            }.HandleInput(expected);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -36,7 +36,7 @@ namespace CodingCat.Mq.Abstractions.Tests
             new SimpleProcessor<string>(
                 value => throw expected,
                 ex => actual = ex
-            ).Process(null);
+            ).HandleInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -59,7 +59,65 @@ namespace CodingCat.Mq.Abstractions.Tests
             )
             {
                 Timeout = TimeSpan.FromMilliseconds(100)
-            }.Process(null);
+            }.HandleInput(null);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Test_ProcessOutput_Ok()
+        {
+            // Arrange
+            var expected = Guid.NewGuid().ToString();
+
+            // Act
+            var actual = new SimpleProcessor<object, string>(
+                value => expected
+            )
+            {
+                Timeout = TimeSpan.FromSeconds(1)
+            }.HandleInput(null);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Test_ProcessOutput_ExceptionHandled()
+        {
+            // Arrange
+            var expected = new Exception();
+            var actual = expected;
+
+            // Act
+            new SimpleProcessor<object, string>(
+                value => throw expected,
+                ex => actual = ex
+            ).HandleInput(null);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Test_ProcessOutput_Timeout()
+        {
+            // Arrange
+            var expected = int.MinValue;
+
+            // Act
+            var actual = new SimpleProcessor<object, int>(
+                value =>
+                {
+                    Thread.Sleep(1500);
+                    return int.MaxValue;
+                }
+            )
+            {
+                DefaultOutput = expected,
+                Timeout = TimeSpan.FromMilliseconds(100)
+            }.HandleInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);
