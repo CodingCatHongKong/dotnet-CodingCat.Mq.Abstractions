@@ -70,6 +70,7 @@ namespace CodingCat.Mq.Abstractions
 
     public abstract class Processor<TInput, TOutput> : Processor
     {
+        public TInput DefaultInput { get; set; } = default(TInput);
         public TOutput DefaultOutput { get; set; } = default(TOutput);
 
         #region Constructor(s)
@@ -87,6 +88,11 @@ namespace CodingCat.Mq.Abstractions
             this.Process(() => output = this.Process(input));
 
             return output;
+        }
+
+        public TOutput HandleInput()
+        {
+            return this.HandleInput(this.DefaultInput);
         }
 
         protected abstract TOutput Process(TInput input);
