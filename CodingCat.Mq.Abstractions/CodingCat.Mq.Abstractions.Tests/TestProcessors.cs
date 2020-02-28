@@ -133,7 +133,7 @@ namespace CodingCat.Mq.Abstractions.Tests
             var actual = new SimpleOutputProcessor<string>(() => expected)
             {
                 Timeout = TimeSpan.FromSeconds(1)
-            }.Process();
+            }.ProcessWithDefaultInput();
 
             // Assert
             Assert.AreEqual(expected, actual);

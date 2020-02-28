@@ -90,7 +90,7 @@ namespace CodingCat.Mq.Abstractions
             return output;
         }
 
-        public TOutput Process()
+        public TOutput ProcessWithDefaultInput()
         {
             return this.HandleInput(this.DefaultInput);
         }
