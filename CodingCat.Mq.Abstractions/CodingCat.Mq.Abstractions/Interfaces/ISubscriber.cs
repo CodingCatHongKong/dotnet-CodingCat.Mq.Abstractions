@@ -6,7 +6,7 @@ namespace CodingCat.Mq.Abstractions.Interfaces
     {
         event EventHandler Subscribed;
 
-        event EventHandler Completed;
+        event EventHandler Processed;
 
         event EventHandler Disposing;
 
