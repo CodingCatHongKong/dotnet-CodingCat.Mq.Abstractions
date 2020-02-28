@@ -15,8 +15,7 @@
 
         #endregion Constructor(s)
 
-        protected override void Process(T input) =>
-            this.DelegatedProcess(input);
+        protected override void Process(T input) => this.DelegatedProcess(input);
     }
 
     public abstract class DelegatedProcessor<TInput, TOutput>
@@ -35,7 +34,6 @@
 
         #endregion Constructor(s)
 
-        protected override TOutput Process(TInput input) =>
-            this.DelegatedProcess(input);
+        protected override TOutput Process(TInput input) => this.DelegatedProcess(input);
     }
 }
