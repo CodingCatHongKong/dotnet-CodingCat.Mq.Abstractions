@@ -1,10 +1,10 @@
-﻿using System;
+﻿using CodingCat.Mq.Abstractions.Tests.Impls;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using CodingCat.Mq.Abstractions.Tests.Impls;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace CodingCat.Mq.Abstractions.Tests
 {
