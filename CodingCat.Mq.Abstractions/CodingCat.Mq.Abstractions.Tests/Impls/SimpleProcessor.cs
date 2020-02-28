@@ -2,13 +2,10 @@
 
 namespace CodingCat.Mq.Abstractions.Tests.Impls
 {
-    public class SimpleProcessor<T> : Processor<T>
+    public class SimpleProcessor<T> : DelegatedProcessor<T>
     {
-        public delegate void ProcessDelegate(T input);
-
         public delegate void OnProcessErrorDelegate(Exception ex);
 
-        public ProcessDelegate ProcessHandler { get; }
         public OnProcessErrorDelegate ProcessExceptionHandler { get; }
 
         #region Constructor(s)
@@ -16,9 +13,8 @@ namespace CodingCat.Mq.Abstractions.Tests.Impls
         public SimpleProcessor(
             ProcessDelegate processHandler,
             OnProcessErrorDelegate processExceptionHandler = null
-        )
+        ) : base(processHandler)
         {
-            this.ProcessHandler = processHandler;
             this.ProcessExceptionHandler = processExceptionHandler;
         }
 
@@ -29,18 +25,13 @@ namespace CodingCat.Mq.Abstractions.Tests.Impls
             this.ProcessExceptionHandler?.Invoke(ex);
             base.OnProcessError(ex);
         }
-
-        protected override void Process(T input) => this.ProcessHandler(input);
     }
 
     public class SimpleProcessor<TInput, TOutput>
-        : Processor<TInput, TOutput>
+        : DelegatedProcessor<TInput, TOutput>
     {
-        public delegate TOutput ProcessDelegate(TInput input);
-
         public delegate void OnProcessErrorDelegate(Exception ex);
 
-        public ProcessDelegate ProcessHandler { get; }
         public OnProcessErrorDelegate ProcessExceptionHandler { get; }
 
         #region Constructor(s)
@@ -48,9 +39,8 @@ namespace CodingCat.Mq.Abstractions.Tests.Impls
         public SimpleProcessor(
             ProcessDelegate processHandler,
             OnProcessErrorDelegate processExceptionHandler = null
-        )
+        ) : base(processHandler)
         {
-            this.ProcessHandler = processHandler;
             this.ProcessExceptionHandler = processExceptionHandler;
         }
 
@@ -61,8 +51,5 @@ namespace CodingCat.Mq.Abstractions.Tests.Impls
             this.ProcessExceptionHandler?.Invoke(ex);
             base.OnProcessError(ex);
         }
-
-        protected override TOutput Process(TInput input) =>
-            this.ProcessHandler(input);
     }
 }
