@@ -1,11 +1,12 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CodingCat.Mq.Abstractions.Interfaces;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace CodingCat.Mq.Abstractions
 {
-    public abstract class Processor
+    public abstract class Processor : IProcessor
     {
         public ILogger Logger { get; set; }
         public TimeSpan Timeout { get; set; }
@@ -50,7 +51,8 @@ namespace CodingCat.Mq.Abstractions
         }
     }
 
-    public abstract class Processor<TInput> : Processor
+    public abstract class Processor<TInput>
+        : Processor, IProcessor<TInput>
     {
         #region Constructor(s)
 
@@ -68,7 +70,8 @@ namespace CodingCat.Mq.Abstractions
         protected abstract void Process(TInput input);
     }
 
-    public abstract class Processor<TInput, TOutput> : Processor
+    public abstract class Processor<TInput, TOutput>
+        : Processor, IProcessor<TInput, TOutput>
     {
         public TInput DefaultInput { get; set; } = default(TInput);
         public TOutput DefaultOutput { get; set; } = default(TOutput);
