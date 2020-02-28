@@ -1,12 +1,14 @@
-﻿using CodingCat.Serializers.Interfaces;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace CodingCat.Mq.Abstractions
 {
     public abstract class Processor
     {
         public ILogger Logger { get; set; }
+        public TimeSpan Timeout { get; set; }
 
         public virtual void OnProcessError(Exception ex)
         {
@@ -16,31 +18,36 @@ namespace CodingCat.Mq.Abstractions
 
     public abstract class Processor<TInput> : Processor
     {
-        public ISerializer<TInput> InputSerializer { get; protected set; }
-
         #region Constructor(s)
 
-        protected Processor()
+        public Processor() : base()
         {
-        }
-
-        public Processor(ISerializer<TInput> inputSerializer)
-        {
-            this.InputSerializer = inputSerializer;
         }
 
         #endregion Constructor(s)
 
         public virtual void Process(TInput input)
         {
-            try
+            var willTimeout = this.Timeout.TotalMilliseconds > 0;
+            var notifier = new AutoResetEvent(false);
+
+            if (willTimeout)
             {
-                this.OnInput(input);
+                Task.Delay(this.Timeout)
+                    .ContinueWith(task => notifier.Set());
             }
-            catch (Exception ex)
+
+            Task.Run(() =>
             {
-                this.OnProcessError(ex);
-            }
+                try { this.OnInput(input); }
+                catch (Exception ex)
+                {
+                    this.OnProcessError(ex);
+                }
+                notifier.Set();
+            });
+
+            using (notifier) notifier.WaitOne();
         }
 
         protected abstract void OnInput(TInput input);
