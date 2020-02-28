@@ -1,7 +1,7 @@
-﻿using System;
-using System.Threading;
-using CodingCat.Mq.Abstractions.Tests.Impls;
+﻿using CodingCat.Mq.Abstractions.Tests.Impls;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Threading;
 
 namespace CodingCat.Mq.Abstractions.Tests
 {
@@ -118,6 +118,22 @@ namespace CodingCat.Mq.Abstractions.Tests
                 DefaultOutput = expected,
                 Timeout = TimeSpan.FromMilliseconds(100)
             }.HandleInput(null);
+
+            // Assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void Test_OutputProcessor_Ok()
+        {
+            // Arrange
+            var expected = Guid.NewGuid().ToString();
+
+            // Act
+            var actual = new SimpleOutputProcessor<string>(() => expected)
+            {
+                Timeout = TimeSpan.FromSeconds(1)
+            }.HandleInput();
 
             // Assert
             Assert.AreEqual(expected, actual);

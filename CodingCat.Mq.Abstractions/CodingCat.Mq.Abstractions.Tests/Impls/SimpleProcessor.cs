@@ -5,6 +5,7 @@ namespace CodingCat.Mq.Abstractions.Tests.Impls
     public class SimpleProcessor<T> : Processor<T>
     {
         public delegate void ProcessDelegate(T input);
+
         public delegate void OnProcessErrorDelegate(Exception ex);
 
         public ProcessDelegate ProcessHandler { get; }
@@ -36,6 +37,7 @@ namespace CodingCat.Mq.Abstractions.Tests.Impls
         : Processor<TInput, TOutput>
     {
         public delegate TOutput ProcessDelegate(TInput input);
+
         public delegate void OnProcessErrorDelegate(Exception ex);
 
         public ProcessDelegate ProcessHandler { get; }
