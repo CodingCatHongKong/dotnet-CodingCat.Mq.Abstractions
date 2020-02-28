@@ -1,4 +1,6 @@
-﻿namespace CodingCat.Mq.Abstractions
+﻿using System;
+
+namespace CodingCat.Mq.Abstractions
 {
     public abstract class DelegatedProcessor<T> : Processor<T>
     {
@@ -8,7 +10,7 @@
 
         #region Constructor(s)
 
-        public DelegatedProcessor(ProcessDelegate delegatedProcess)
+        public DelegatedProcessor(ProcessDelegate delegatedProcess) : base()
         {
             this.DelegatedProcess = delegatedProcess;
         }
@@ -28,7 +30,7 @@
 
         #region Constructor(s)
 
-        public DelegatedProcessor(ProcessDelegate delegatedProcess)
+        public DelegatedProcessor(ProcessDelegate delegatedProcess) : base()
         {
             this.DelegatedProcess = delegatedProcess;
         }
