@@ -77,7 +77,7 @@ namespace CodingCat.Mq.Abstractions.Tests
             )
             {
                 Timeout = TimeSpan.FromSeconds(1)
-            }.HandleInput(null);
+            }.ProcessInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -94,7 +94,7 @@ namespace CodingCat.Mq.Abstractions.Tests
             new SimpleProcessor<object, string>(
                 value => throw expected,
                 ex => actual = ex
-            ).HandleInput(null);
+            ).ProcessInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);
@@ -117,7 +117,7 @@ namespace CodingCat.Mq.Abstractions.Tests
             {
                 DefaultOutput = expected,
                 Timeout = TimeSpan.FromMilliseconds(100)
-            }.HandleInput(null);
+            }.ProcessInput(null);
 
             // Assert
             Assert.AreEqual(expected, actual);

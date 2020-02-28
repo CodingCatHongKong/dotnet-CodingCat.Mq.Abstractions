@@ -81,7 +81,7 @@ namespace CodingCat.Mq.Abstractions
 
         #endregion Constructor(s)
 
-        public virtual TOutput HandleInput(TInput input)
+        public virtual TOutput ProcessInput(TInput input)
         {
             var output = this.DefaultOutput;
 
@@ -92,7 +92,7 @@ namespace CodingCat.Mq.Abstractions
 
         public TOutput ProcessWithDefaultInput()
         {
-            return this.HandleInput(this.DefaultInput);
+            return this.ProcessInput(this.DefaultInput);
         }
 
         protected abstract TOutput Process(TInput input);
