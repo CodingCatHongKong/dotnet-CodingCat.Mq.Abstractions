@@ -3,7 +3,7 @@
 namespace CodingCat.Mq.Abstractions.Tests.Impls
 {
     public class SimpleOutputProcessor<T>
-        : DelegatedOutputProcessor<T>, INoInputProcessor<T>
+        : BaseDelegatedOutputProcessor<T>, INoInputProcessor<T>
     {
         #region Constructor(s)
 

@@ -1,13 +1,13 @@
 ﻿namespace CodingCat.Mq.Abstractions
 {
-    public abstract class DelegatedOutputProcessor<T>
-        : DelegatedProcessor<object, T>
+    public abstract class BaseDelegatedOutputProcessor<T>
+        : BaseDelegatedProcessor<object, T>
     {
         public delegate T OutputProcessDelegate();
 
         #region Constructor(s)
 
-        public DelegatedOutputProcessor(
+        public BaseDelegatedOutputProcessor(
             OutputProcessDelegate delegatedOutputProcess
         ) : base(value => delegatedOutputProcess())
         {

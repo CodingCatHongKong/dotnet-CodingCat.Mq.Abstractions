@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodingCat.Mq.Abstractions
 {
-    public abstract class Processor : IProcessor
+    public abstract class BaseProcessor : IProcessor
     {
         public ILogger Logger { get; set; }
         public TimeSpan Timeout { get; set; }
@@ -51,12 +51,12 @@ namespace CodingCat.Mq.Abstractions
         }
     }
 
-    public abstract class Processor<TInput>
-        : Processor, IProcessor<TInput>
+    public abstract class BaseProcessor<TInput>
+        : BaseProcessor, IProcessor<TInput>
     {
         #region Constructor(s)
 
-        public Processor() : base()
+        public BaseProcessor() : base()
         {
         }
 
@@ -70,15 +70,15 @@ namespace CodingCat.Mq.Abstractions
         protected abstract void Process(TInput input);
     }
 
-    public abstract class Processor<TInput, TOutput>
-        : Processor, IProcessor<TInput, TOutput>
+    public abstract class BaseProcessor<TInput, TOutput>
+        : BaseProcessor, IProcessor<TInput, TOutput>
     {
         public TInput DefaultInput { get; set; } = default(TInput);
         public TOutput DefaultOutput { get; set; } = default(TOutput);
 
         #region Constructor(s)
 
-        public Processor() : base()
+        public BaseProcessor() : base()
         {
         }
 

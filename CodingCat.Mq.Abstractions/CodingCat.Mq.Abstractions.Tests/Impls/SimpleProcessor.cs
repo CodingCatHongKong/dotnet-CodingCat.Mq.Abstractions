@@ -2,7 +2,7 @@
 
 namespace CodingCat.Mq.Abstractions.Tests.Impls
 {
-    public class SimpleProcessor<T> : DelegatedProcessor<T>
+    public class SimpleProcessor<T> : BaseDelegatedProcessor<T>
     {
         public delegate void OnProcessErrorDelegate(Exception ex);
 
@@ -28,7 +28,7 @@ namespace CodingCat.Mq.Abstractions.Tests.Impls
     }
 
     public class SimpleProcessor<TInput, TOutput>
-        : DelegatedProcessor<TInput, TOutput>
+        : BaseDelegatedProcessor<TInput, TOutput>
     {
         public delegate void OnProcessErrorDelegate(Exception ex);
 

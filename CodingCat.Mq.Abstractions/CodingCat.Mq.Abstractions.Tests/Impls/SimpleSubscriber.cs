@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CodingCat.Mq.Abstractions.Tests.Impls
 {
-    public class SimpleSubscriber<T> : Processor<T>, ISubscriber
+    public class SimpleSubscriber<T> : BaseProcessor<T>, ISubscriber
     {
         private object lockable { get; } = new object();
         private Queue<T> inputQueue { get; set; }

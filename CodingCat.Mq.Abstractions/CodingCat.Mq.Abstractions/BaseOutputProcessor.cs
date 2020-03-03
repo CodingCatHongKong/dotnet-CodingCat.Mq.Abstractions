@@ -1,10 +1,10 @@
 ﻿namespace CodingCat.Mq.Abstractions
 {
-    public abstract class OutputProcessor<T> : Processor<object, T>
+    public abstract class BaseOutputProcessor<T> : BaseProcessor<object, T>
     {
         #region Constructor(s)
 
-        public OutputProcessor()
+        public BaseOutputProcessor()
         {
             this.DefaultInput = null;
         }
