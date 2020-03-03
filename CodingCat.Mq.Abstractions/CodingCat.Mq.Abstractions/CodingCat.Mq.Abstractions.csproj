@@ -2,6 +2,13 @@
 
   <PropertyGroup>
     <TargetFrameworks>net461;netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <Version>0.1.0</Version>
+    <Authors>Coding Cat (Hong Kong) Limited</Authors>
+    <RepositoryUrl>https://github.com/CodingCatHongKong/dotnet-CodingCat.Mq.Abstractions</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/CodingCatHongKong/dotnet-CodingCat.Mq.Abstractions</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/CodingCatHongKong/dotnet-CodingCat.Mq.Abstractions/blob/master/LICENSE</PackageLicenseUrl>
   </PropertyGroup>
 
   <ItemGroup>
