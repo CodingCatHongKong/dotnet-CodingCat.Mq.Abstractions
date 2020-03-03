@@ -119,51 +119,5 @@ namespace CodingCat.Mq.Abstractions.Tests
                 .Equals(QUEUING_AMOUNT)
             );
         }
-
-        [TestMethod]
-        public void Test_Disposing_IsNotAccepting()
-        {
-            const int QUEUING_AMOUNT = 50;
-
-            // Arrange
-            var queue = new Queue<string>();
-            var subscriber = new SimpleSubscriber<string>(queue);
-
-            var expected = new string[QUEUING_AMOUNT]
-                .Select(val => Guid.NewGuid().ToString())
-                .ToArray();
-            var notExpected = new List<string>();
-            var actual = new List<string>();
-            var isDisposing = false;
-
-            subscriber.Processed += (sender, args) =>
-                actual.Add(subscriber.LastInput);
-            subscriber.Disposing += (sender, args) => isDisposing = true;
-
-            // Act
-            subscriber.Subscribe();
-            foreach (var value in expected)
-                queue.Enqueue(value);
-
-            Task.Run(() =>
-            {
-                while (true)
-                {
-                    var value = Guid.NewGuid().ToString();
-                    queue.Enqueue(value);
-                    if (isDisposing)
-                        notExpected.Add(value);
-                    Thread.Sleep(100);
-                }
-            });
-
-            subscriber.Dispose();
-
-            // Assert
-            Assert.IsTrue(actual
-                .Intersect(notExpected)
-                .Count() <= 0
-            );
-        }
     }
 }
